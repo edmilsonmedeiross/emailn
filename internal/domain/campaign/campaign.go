@@ -20,7 +20,7 @@ func NewCampaign(name string, content string, emails []string) *Campaign {
 		contacts[i].Email = email
 	}
 	return &Campaign{
-		ID: 				"1",
+		ID: 		"1",
 		Name:      	name,
 		CreatedOn: 	time.Now(),
 		Content:   	content,
