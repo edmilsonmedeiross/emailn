@@ -15,7 +15,7 @@ var (
 func TestNewCampaign(t *testing.T) {
 	assert := assert.New(t)
 
-	campaign := NewCampaign(name, content, contacts)
+	campaign, _ := NewCampaign(name, content, contacts)
 
 	assert.Equal(name, campaign.Name)
 	assert.Equal(content, campaign.Content)
@@ -29,7 +29,37 @@ func TestNewCampaign(t *testing.T) {
 func TestNewCampaignID(t *testing.T) {
 	assert := assert.New(t)
 
-	campaign := NewCampaign(name, content, contacts)
+	campaign, _ := NewCampaign(name, content, contacts)
 
 	assert.NotNil(t, campaign.ID)
+}
+
+func Test_NewCampaign_MustValidateName(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign("", content, contacts)
+	assert.Equal("name is required", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContent(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(name, "", contacts)
+	assert.Equal("content is required", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContacts(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(name, content, []string{})
+	assert.Equal("contacts is required", err.Error())
+}
+
+func Test_NewCampaign_MustCreateCampaignWithCreatedOn(t *testing.T) {
+	assert := assert.New(t)
+
+	campaign, _ := NewCampaign(name, content, contacts)
+
+	assert.NotNil(campaign.CreatedOn)
+	assert.False(campaign.CreatedOn.IsZero())
 }
