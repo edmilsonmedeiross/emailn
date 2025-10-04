@@ -6,11 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	name     = "Test Campaign"
+	content  = "This is a test campaign."
+	contacts = []string{"email@one.com", "email@two.com"}
+)
+
 func TestNewCampaign(t *testing.T) {
 	assert := assert.New(t)
-	name := "Test Campaign"
-	content := "This is a test campaign."
-	contacts := []string{"email@one.com", "email@two.com"}
 
 	campaign := NewCampaign(name, content, contacts)
 
@@ -21,4 +24,12 @@ func TestNewCampaign(t *testing.T) {
 	for i, contact := range campaign.Contacts {
 		assert.Equal(contacts[i], contact.Email)
 	}
+}
+
+func TestNewCampaignID(t *testing.T) {
+	assert := assert.New(t)
+
+	campaign := NewCampaign(name, content, contacts)
+
+	assert.NotNil(t, campaign.ID)
 }
