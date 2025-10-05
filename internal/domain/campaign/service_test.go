@@ -1,9 +1,11 @@
 package campaign
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/edmilsonmedeiross/emailn/internal/contract"
+	internalerrors "github.com/edmilsonmedeiross/emailn/internal/domain/internal-errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -17,14 +19,17 @@ func (r *repositoryMock) Save(campaign *Campaign) error {
 	return args.Error(0)
 }
 
-func TestCreateCampaign(t *testing.T) {
-	assert := assert.New(t)
-	service := Service{}
-	newCampaign := contract.NewCampaignDTO{
+var (
+	newCampaign = contract.NewCampaignDTO{
 		Name:    "test",
 		Content: "any content",
 		Emails:  []string{"example@example.com"},
 	}
+)
+
+func TestCreateCampaign(t *testing.T) {
+	assert := assert.New(t)
+	service := Service{}
 
 	id, err := service.Create(newCampaign)
 
@@ -34,7 +39,6 @@ func TestCreateCampaign(t *testing.T) {
 
 func Test_SaveCampaign(t *testing.T) {
 	repo := new(repositoryMock)
-	newCampaign := contract.NewCampaignDTO{Name: "Test Campaign", Content: "Test Description", Emails: []string{"example@example.com"}}
 
 	repo.On("Save", mock.MatchedBy(func(campaign *Campaign) bool {
 		if campaign.Name != newCampaign.Name || campaign.Content != newCampaign.Content || len(campaign.Contacts) != len(newCampaign.Emails) {
@@ -50,4 +54,16 @@ func Test_SaveCampaign(t *testing.T) {
 	assert.Nil(t, err)
 	repo.AssertCalled(t, "Save", mock.Anything)
 	repo.AssertExpectations(t)
+}
+
+func Test_ErrorOnSaveCampaign(t *testing.T) {
+	assert := assert.New(t)
+	repo := new(repositoryMock)
+	repo.On("Save", mock.Anything).Return(errors.New("internal server error"))
+
+	service := Service{Repository: repo}
+
+	_, err := service.Create(newCampaign)
+
+	assert.True(errors.Is(err, internalerrors.ErrSaveCampaignFailed))
 }
