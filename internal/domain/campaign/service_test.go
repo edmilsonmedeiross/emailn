@@ -21,15 +21,20 @@ func (r *repositoryMock) Save(campaign *Campaign) error {
 
 var (
 	newCampaign = contract.NewCampaignDTO{
-		Name:    "test",
+		Name:    "teste",
 		Content: "any content",
 		Emails:  []string{"example@example.com"},
 	}
+
+	service = Service{}
 )
 
 func TestCreateCampaign(t *testing.T) {
 	assert := assert.New(t)
-	service := Service{}
+	repo := new(repositoryMock)
+	repo.On("Save", mock.Anything).Return(nil)
+
+	service.Repository = repo
 
 	id, err := service.Create(newCampaign)
 

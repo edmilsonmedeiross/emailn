@@ -3,6 +3,7 @@ package campaign
 import (
 	"testing"
 
+	"github.com/jaswdr/faker/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -10,6 +11,7 @@ var (
 	name     = "Test Campaign"
 	content  = "This is a test campaign."
 	contacts = []string{"email@one.com", "email@two.com"}
+	fake     = faker.New()
 )
 
 func TestNewCampaign(t *testing.T) {
@@ -34,25 +36,39 @@ func TestNewCampaignID(t *testing.T) {
 	assert.NotNil(t, campaign.ID)
 }
 
-func Test_NewCampaign_MustValidateName(t *testing.T) {
+func Test_NewCampaign_MustValidateNameMin(t *testing.T) {
 	assert := assert.New(t)
 
 	_, err := NewCampaign("", content, contacts)
-	assert.Equal("name is required", err.Error())
+	assert.Equal("the field name must have a minimum value of 5", err.Error())
 }
 
-func Test_NewCampaign_MustValidateContent(t *testing.T) {
+func Test_ValidateCampaignNameMax(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(fake.Lorem().Text(30), content, contacts)
+	assert.Equal("the field name must have a maximum value of 24", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContentMin(t *testing.T) {
 	assert := assert.New(t)
 
 	_, err := NewCampaign(name, "", contacts)
-	assert.Equal("content is required", err.Error())
+	assert.Equal("the field content must have a minimum value of 5", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContentMax(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(name, fake.Lorem().Text(1040), contacts)
+	assert.Equal("the field content must have a maximum value of 1024", err.Error())
 }
 
 func Test_NewCampaign_MustValidateContacts(t *testing.T) {
 	assert := assert.New(t)
 
 	_, err := NewCampaign(name, content, []string{})
-	assert.Equal("contacts is required", err.Error())
+	assert.Equal("the field contacts must have a minimum value of 1", err.Error())
 }
 
 func Test_NewCampaign_MustCreateCampaignWithCreatedOn(t *testing.T) {

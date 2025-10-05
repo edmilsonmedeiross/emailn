@@ -10,9 +10,12 @@ type Service struct {
 }
 
 func (s *Service) Create(campaign contract.NewCampaignDTO) (string, error) {
-	newCampaign, _ := NewCampaign(campaign.Name, campaign.Content, campaign.Emails)
+	newCampaign, err := NewCampaign(campaign.Name, campaign.Content, campaign.Emails)
+	if err != nil {
+		return "", err
+	}
 
-	err := s.Repository.Save(newCampaign)
+	err = s.Repository.Save(newCampaign)
 	if err != nil {
 		return "", internalerrors.ErrSaveCampaignFailed
 	}
