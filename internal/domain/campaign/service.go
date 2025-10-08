@@ -22,3 +22,9 @@ func (s *Service) Create(campaign contract.NewCampaignDTO) (string, error) {
 
 	return newCampaign.ID, nil
 }
+
+func (s *Service) Get() []Campaign {
+	campaigns := s.Repository.Get()
+
+	return campaigns
+}
