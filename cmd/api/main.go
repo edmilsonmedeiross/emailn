@@ -21,8 +21,8 @@ func main() {
 	service := &campaign.Service{Repository: repository}
 	handler := &endpoints.Handler{Service: service}
 
-	r.Post("/campaigns", handler.CampaignPost)
-	r.Get("/campaigns", handler.CampaignsGet)
+	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))
+	r.Get("/campaigns", endpoints.HandlerError(handler.CampaignsGet))
 
 	http.ListenAndServe(":8080", r)
 }
