@@ -11,7 +11,7 @@ func (h *Handler) CampaignPost(w http.ResponseWriter, r *http.Request) (interfac
 	var request contract.NewCampaignDTO
 	render.DecodeJSON(r.Body, &request)
 
-	id, err := h.Service.Create(request)
+	id, err := h.Service.Create(&request)
 
 	return map[string]interface{}{"id": id}, http.StatusCreated, err
 }

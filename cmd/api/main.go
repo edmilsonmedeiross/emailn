@@ -18,7 +18,7 @@ func main() {
 	r.Use(middleware.RealIP)
 
 	repository := &database.CampaignRepository{}
-	service := &campaign.Service{Repository: repository}
+	service := &campaign.ServiceImpl{Repository: repository}
 	handler := &endpoints.Handler{Service: service}
 
 	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))

@@ -24,13 +24,13 @@ func (r *repositoryMock) Get() []Campaign {
 }
 
 var (
-	newCampaign = contract.NewCampaignDTO{
+	newCampaign = &contract.NewCampaignDTO{
 		Name:    "teste",
 		Content: "any content",
 		Emails:  []string{"example@example.com"},
 	}
 
-	service = Service{}
+	service = ServiceImpl{}
 )
 
 func TestCreateCampaign(t *testing.T) {
@@ -56,7 +56,7 @@ func Test_SaveCampaign(t *testing.T) {
 		return true
 	})).Return(nil)
 
-	service := Service{Repository: repo}
+	service := ServiceImpl{Repository: repo}
 	id, err := service.Create(newCampaign)
 
 	assert.NotNil(t, id)
@@ -70,7 +70,7 @@ func Test_ErrorOnSaveCampaign(t *testing.T) {
 	repo := new(repositoryMock)
 	repo.On("Save", mock.Anything).Return(errors.New("internal server error"))
 
-	service := Service{Repository: repo}
+	service := ServiceImpl{Repository: repo}
 
 	_, err := service.Create(newCampaign)
 

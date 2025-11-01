@@ -5,7 +5,7 @@ import (
 )
 
 func (h *Handler) CampaignsGet(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
-	campaigns := h.Service.Repository.Get()
+	campaigns := h.Service.Get()
 
 	return map[string]interface{}{"campaigns": campaigns}, http.StatusOK, nil
 }
