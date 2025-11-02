@@ -28,6 +28,11 @@ func (m *mockCampaignService) Get() []campaign.Campaign {
 	return args.Get(0).([]campaign.Campaign)
 }
 
+func (m *mockCampaignService) GetByID(id string) (*contract.GetByCampaignResponseDTO, error) {
+	// args := m.Called(id)
+	return nil, nil
+}
+
 func TestCampaignsPost(t *testing.T) {
 
 	assert := assert.New(t)

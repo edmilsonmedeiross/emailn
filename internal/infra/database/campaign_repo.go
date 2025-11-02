@@ -16,3 +16,8 @@ func (r *CampaignRepository) Save(campaign *campaign.Campaign) error {
 func (r *CampaignRepository) Get() []campaign.Campaign {
 	return r.campaigns
 }
+
+func (r *CampaignRepository) GetByID(id string) (*campaign.Campaign, error) {
+
+	return nil, nil
+}
